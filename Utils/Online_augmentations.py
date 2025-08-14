@@ -1,5 +1,5 @@
 """
-Online Augmentations    Script  ver： Nov 25th 15:45
+Online Augmentations    Script  ver： Aug 14th 20:15
 ref:
 CutOut, Mixup, CutMix based on
 https://blog.csdn.net/cp1314971/article/details/106612060
@@ -511,7 +511,7 @@ class CellMix(object):
 
 
 # ask func
-def get_online_augmentation(augmentation_name, p=0.5, class_num=2, batch_size=4, edge_size=224, device='cpu'):
+def get_online_augmentation(augmentation_name=None, p=0.5, class_num=2, batch_size=4, edge_size=224, device='cpu'):
     """
     :param augmentation_name: name of data-augmentation method
     :param p: chance of triggering
@@ -525,7 +525,10 @@ def get_online_augmentation(augmentation_name, p=0.5, class_num=2, batch_size=4,
 
     return Augmentation
     """
-    if augmentation_name == 'CellMix-Group':  # Pair the images and in-place swap the relation tokens between each pair
+    if augmentation_name == None or augmentation_name == 'None':
+        Augmentation = None
+
+    elif augmentation_name == 'CellMix-Group':  # Pair the images and in-place swap the relation tokens between each pair
         Augmentation = CellMix(shuffle_p=p, class_num=class_num, strategy='In-place', group_shuffle_size=2,
                                device=device)
 
@@ -578,20 +581,21 @@ def get_online_augmentation(augmentation_name, p=0.5, class_num=2, batch_size=4,
                             size=(edge_size, edge_size), device=device)
 
     elif augmentation_name == 'PuzzleMix':
-        Augmentation = None
+        raise NotImplementedError
         # fixme: all related parts have been taken out separately
         # Augmentation = PuzzleMix(alpha=2, shuffle_p=p, class_num=class_num, batch_size=batch_size, device=device)
         # return Augmentation
 
     elif augmentation_name == 'CoMix':
         # TODO CoMix
-        Augmentation = None
+        raise NotImplementedError
 
     elif augmentation_name == 'RandomMix':
         # TODO RandomMix
-        Augmentation = None
+        raise NotImplementedError
 
     else:
+        print(augmentation_name, ' is not implemented')
         raise NotImplementedError
 
     if Augmentation is not None:
